@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 
+<script>
+
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+        
+            // CSV file
+            csvFile = new Blob([csv], {type: "text/csv"});
+        
+            // Download link
+            downloadLink = document.createElement("a");
+        
+            // File name
+            downloadLink.download = filename;
+        
+            // Create a link to the file
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+        
+            // Hide download link
+            downloadLink.style.display = "none";
+        
+            // Add the link to DOM
+            document.body.appendChild(downloadLink);
+        
+            // Click download link
+            downloadLink.click();
+        }
+
+
+
+
+
+
+
+
+        function exportTableToCSV(filename) {
+            var csv = [];
+            var rows = document.querySelectorAll("table tr");
+            
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+                
+                for (var j = 0; j < cols.length; j++) 
+                    row.push(cols[j].innerText);
+                
+                csv.push(row.join(","));        
+            }
+        
+            // Download CSV file
+            downloadCSV(csv.join("\n"), filename);
+        }
+    
+
+</script>
+
+
+
+ <head>
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <meta name="description" content="">
+     <meta name="author" content="">
+     <link rel="icon" href="../../favicon.ico">
+ 
+     <title>BusLogger</title>
+
+</head>
+<!-- <input type="hidden" value= {{datadump}} name="humanname"> -->
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>TimeStamp</th>
+        <th>UserName</th>
+    </tr>
+</table>
+<button onclick="exportTableToCSV('members.csv')">Export HTML Table To CSV File</button>
+
+
+</html>
+
+<script>
+    var user = JSON.parse('{{ datadump | tojson | safe}}');
+    alert(user[1]);
+    console.log(user);
+ 
+    $(document).ready(function () {
+//        var json = [{"User_Name":"John Doe","score":"10","team":"1"},{"User_Name":"Jane Smith","score":"15","team":"2"},{"User_Name":"Chuck Berry","score":"12","team":"2"}];
+        var tr;
+        for (var i = 0; i < user.length; i++) {
+            tr = $('<tr/>');
+            tr.append("<td>" + user[i].ID + "</td>");
+            tr.append("<td>" + user[i].TimeStamp + "</td>");
+            tr.append("<td>" + user[i].UserName + "</td>");
+
+            $('table').append(tr);
+        }
+    });
+
+
+    
+
+
+
+
+</script>
